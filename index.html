@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<link href="./css/fonts.css" rel="stylesheet">
+		<link href="./css/materialdesignicons.min.css" rel="stylesheet">
+		<link href="./css/vuetify.min.css" rel="stylesheet">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+	</head>
+	<body>
+		<div id="app">
+			<v-app>
+				<v-container
+				fluid
+				fill-height
+				>
+					<v-layout
+						align-center
+						justify-center
+					>
+						<v-flex
+							xs12
+							sm8
+							md4
+						>
+							<v-card>
+								<v-toolbar
+									color="primary"
+									dark
+									flat
+								>
+									<v-toolbar-title>Triangulator</v-toolbar-title>
+								</v-toolbar>
+								<v-card-text>
+									<v-form>
+										<v-text-field
+											v-model="coordA"
+											label="Latitude,Longitude A"
+											name="coordA"
+											type="text"
+										>
+										</v-text-field>
+										<v-text-field
+											v-model="distA"
+											label="Distance from A"
+											name="coordA"
+											type="text"
+										>
+										</v-text-field>
+										<v-text-field
+											v-model="coordB"
+											label="Latitude,Longitude B"
+											name="coordB"
+											type="text"
+										>
+										</v-text-field>
+										<v-text-field
+											v-model="distB"
+											label="Distance from B"
+											name="distB"
+											type="text"
+										>
+										</v-text-field>
+										<v-text-field
+											v-model="coordC"
+											label="Latitude,Longitude C"
+											name="coordC"
+											type="text"
+										>
+										</v-text-field>
+										<v-text-field
+											v-model="distC"
+											label="Distance from C"
+											name="distC"
+											type="text"
+										>
+										</v-text-field>
+									</v-form>
+								</v-card-text>
+								<v-card-actions
+									class="justify-center"
+								>
+									<v-btn
+										color="primary"
+										@click="calculate"
+									>
+										Calculate
+									</v-btn>
+								</v-card-actions>
+								<v-card-text>
+									<v-text-field
+									readonly
+										v-model="target"
+										label="Target"
+										name="target"
+										type="text"
+									>
+									</v-text-field>
+								</v-card-text>
+							</v-card>
+						</v-flex>
+					</v-layout>
+				</v-container>
+			</v-app>
+		</div>
+
+		<script src="./js/vue.js"></script>
+		<script src="./js/vuetify.js"></script>
+		<script src="./app.js"></script>
+	</body>
+</html>
