@@ -63,13 +63,10 @@ new Vue({
 			var r3 = parseFloat(this.distC);
 			
 			var s12 = this.geodesicLength(lat1, lon1, lat2, lon2);
-			console.log("s12: " + s12);
 			
 			var angle = this.cosineRule(r2, r1, s12);
-			console.log("angle: " + angle);
 			
 			var azi12 = this.geodesicAzimuth(lat1, lon1, lat2, lon2);
-			console.log("azi12: " + azi12);
 			
 			var azi14 = azi12 + angle;
 			
@@ -77,28 +74,18 @@ new Vue({
 			
 			var p4 = geod.Direct(lat1, lon1, azi14, r1);
 			
-			console.log("p4.lat: " + p4.lat2);
-			console.log("p4.lon: " + p4.lon2);
-			
 			var azi15 = azi12 - angle;
 			
 			var p5 = geod.Direct(lat1, lon1, azi15, r1);
-			
-			console.log("p5.lat: " + p5.lat2);
-			console.log("p5.lon: " + p5.lon2);
 			
 			var s13 = this.geodesicLength(lat1, lon1, lat3, lon3);
 			var angle2 = this.cosineRule(r3, r1, s13);
 			var azi13 = this.geodesicAzimuth(lat1, lon1, lat3, lon3);
 			var azi16 = azi13 + angle2;
 			var p6 = geod.Direct(lat1, lon1, azi16, r1);
-			console.log("p6.lat: " + p6.lat2);
-			console.log("p6.lon: " + p6.lon2);
 			
 			var azi17 = azi13 - angle2;
 			var p7 = geod.Direct(lat1, lon1, azi17, r1);
-			console.log("p7.lat: " + p7.lat2);
-			console.log("p7.lon: " + p7.lon2);
 			
 			this.closestPoints(p4.lat2.toFixed(6), 
 												 p4.lon2.toFixed(6), 
@@ -121,13 +108,9 @@ new Vue({
 
 		cosineRule(a, b, c) {
 			
-			console.log("a: " + a);
-			console.log("b: " + b);
-			console.log("c: " + c);
 			var numerator = Math.pow(b, 2) + Math.pow(c, 2) - Math.pow(a, 2);
-			console.log("num: " + numerator);
+			
 			var denominator = 2 * b * c;
-			console.log("den: " + denominator);
 			
 			return this.degrees(Math.acos(numerator / denominator));
 		},
