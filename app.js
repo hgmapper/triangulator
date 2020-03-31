@@ -10,6 +10,9 @@ new Vue({
 		}
 	}),
 	data: {
+		showLatLon: false,
+		showLonLat: false,
+		showGeoJSON: false,
 		coordA: "",
 		distA: "",
 		coordB: "",
@@ -17,21 +20,44 @@ new Vue({
 		coordC: "",
 		distC: "",
 		target: "",
-		target2: "",
 		inputGeoJSON: "",
 		outputGeoJSON: ""
 	},
 	methods: {
 		
 		calculateWithGeodesics() {
-			this.parseJSON();
 			
-			var lat1 = this.coordA[1];
-			var lon1 = this.coordA[0];
-			var lat2 = this.coordB[1];
-			var lon2 = this.coordB[0];
-			var lat3 = this.coordC[1];
-			var lon3 = this.coordC[0];
+			var lat1, lon1, lat2, lon2, lat3, lon3;
+			
+			if(this.showGeoJSON) {
+				this.parseJSON();
+				
+				lat1 = this.coordA[1];
+				lon1 = this.coordA[0];
+				lat2 = this.coordB[1];
+				lon2 = this.coordB[0];
+				lat3 = this.coordC[1];
+				lon3 = this.coordC[0];
+			}
+			
+			if(this.showLatLon) {
+				lat1 = parseFloat(this.coordA.split(",")[0]);
+				lon1 = parseFloat(this.coordA.split(",")[1]);
+				lat2 = parseFloat(this.coordB.split(",")[0]);
+				lon2 = parseFloat(this.coordB.split(",")[1]);
+				lat3 = parseFloat(this.coordC.split(",")[0]);
+				lon3 = parseFloat(this.coordC.split(",")[1]);
+			}
+			
+			if(this.showLonLat) {
+				lat1 = parseFloat(this.coordA.split(",")[1]);
+				lon1 = parseFloat(this.coordA.split(",")[0]);
+				lat2 = parseFloat(this.coordB.split(",")[1]);
+				lon2 = parseFloat(this.coordB.split(",")[0]);
+				lat3 = parseFloat(this.coordC.split(",")[1]);
+				lon3 = parseFloat(this.coordC.split(",")[0]);
+			}
+			
 			var r1 = parseFloat(this.distA);
 			var r2 = parseFloat(this.distB);
 			var r3 = parseFloat(this.distC);
@@ -47,12 +73,6 @@ new Vue({
 			
 			var azi14 = azi12 + angle;
 			
-			/*
-			//because azi is negative
-			azi13 = azi13 + 360;
-			console.log("azi13: " + azi13);
-			*/
-			
 			var geod = GeographicLib.Geodesic.WGS84;
 			
 			var p4 = geod.Direct(lat1, lon1, azi14, r1);
@@ -60,18 +80,12 @@ new Vue({
 			console.log("p4.lat: " + p4.lat2);
 			console.log("p4.lon: " + p4.lon2);
 			
-			//this.target = p4.lat2.toFixed(6) + "," + p4.lon2.toFixed(6);
-			
-			
 			var azi15 = azi12 - angle;
 			
 			var p5 = geod.Direct(lat1, lon1, azi15, r1);
 			
 			console.log("p5.lat: " + p5.lat2);
 			console.log("p5.lon: " + p5.lon2);
-			
-			//this.target2 = p5.lat2.toFixed(6) + "," + p5.lon2.toFixed(6);
-			
 			
 			var s13 = this.geodesicLength(lat1, lon1, lat3, lon3);
 			var angle2 = this.cosineRule(r3, r1, s13);
@@ -86,9 +100,23 @@ new Vue({
 			console.log("p7.lat: " + p7.lat2);
 			console.log("p7.lon: " + p7.lon2);
 			
-			this.closestPoints(p4.lat2, p4.lon2, p5.lat2, p5.lon2, p6.lat2, p6.lon2, p7.lat2, p7.lon2)
+			this.closestPoints(p4.lat2.toFixed(6), 
+												 p4.lon2.toFixed(6), 
+												 p5.lat2.toFixed(6), 
+												 p5.lon2.toFixed(6), 
+												 p6.lat2.toFixed(6), 
+												 p6.lon2.toFixed(6), 
+												 p7.lat2.toFixed(6), 
+												 p7.lon2.toFixed(6))
 			
-			this.exportJSON();
+			if(this.showLonLat) {
+				var lon = this.target.split(",")[1];
+				var lat = this.target.split(",")[0];
+				this.target = lon + "," + lat;
+			}
+			if(this.showGeoJSON) {
+				this.exportJSON();
+			}
 		},
 		
 
@@ -97,25 +125,12 @@ new Vue({
 			console.log("a: " + a);
 			console.log("b: " + b);
 			console.log("c: " + c);
-			
-			//assume a, b, c << earth rad.
 			var numerator = Math.pow(b, 2) + Math.pow(c, 2) - Math.pow(a, 2);
 			console.log("num: " + numerator);
 			var denominator = 2 * b * c;
 			console.log("den: " + denominator);
 			
 			return this.degrees(Math.acos(numerator / denominator));
-			
-			/*
-			//attempt spherical trig
-			var numerator = Math.cos(a) - Math.cos(b) * Math.cos(c);
-			console.log("num: " + numerator);
-			var denominator = Math.sin(b) * Math.sin(c);
-			console.log("den: " + denominator);
-			
-			return Math.acos(numerator / denominator);
-			*/
-			
 		},
 		
 		geodesicLength(lat1, lon1, lat2, lon2) {

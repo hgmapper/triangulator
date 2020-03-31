@@ -31,92 +31,194 @@
 								>
 									<v-toolbar-title>Triangulator</v-toolbar-title>
 								</v-toolbar>
-								<v-card-text>
-									<v-form>
-									  <v-textarea
-											v-model="inputGeoJSON"
-											label="Input GeoJSON"
-											name="inputGeoJSON"
-											type="text"
-										>	
-										</v-textarea>
-										<v-text-field
-											v-model="coordA"
-											label="Latitude,Longitude A"
-											name="coordA"
-											type="text"
-										>
-										</v-text-field>
-										<v-text-field
-											v-model="distA"
-											label="Distance from A in metres"
-											name="coordA"
-											type="text"
-										>
-										</v-text-field>
-										<v-text-field
-											v-model="coordB"
-											label="Latitude,Longitude B"
-											name="coordB"
-											type="text"
-										>
-										</v-text-field>
-										<v-text-field
-											v-model="distB"
-											label="Distance from B in metres"
-											name="distB"
-											type="text"
-										>
-										</v-text-field>
-										<v-text-field
-											v-model="coordC"
-											label="Latitude,Longitude C"
-											name="coordC"
-											type="text"
-										>
-										</v-text-field>
-										<v-text-field
-											v-model="distC"
-											label="Distance from C in metres"
-											name="distC"
-											type="text"
-										>
-										</v-text-field>
-									</v-form>
-								</v-card-text>
 								<v-card-actions
 									class="justify-center"
 								>
 									<v-btn
-										color="primary"
-										@click="calculateWithGeodesics"
+										@click="showLatLon = !showLatLon; showLonLat = false; showGeoJSON = false;"
 									>
-										Calculate
+											Lat, Lon Format 
 									</v-btn>
 									<v-btn
-										color="primary"
-										@click="calculateWithGeodesics"
+										@click="showLonLat = !showLonLat; showLatLon = false; showGeoJSON = false;"
 									>
-										Parse
+											Lon, Lat Format 
+									</v-btn>
+									<v-btn
+										@click="showGeoJSON = !showGeoJSON; showLatLon = false; showLonLat = false;"
+									>
+											GeoJSON Format 
 									</v-btn>
 								</v-card-actions>
-								<v-card-text>
-									<v-text-field
-									readonly
-										v-model="target"
-										label="Target"
-										name="target"
-										type="text"
+								<div v-show="showLatLon">
+									<v-card-text>
+										<v-form>
+											<v-text-field
+												v-model="coordA"
+												label="Latitude, Longitude A"
+												name="coordA"
+												type="text"
+											>
+											</v-text-field>
+											<v-text-field
+												v-model="distA"
+												label="Distance from A in metres"
+												name="coordA"
+												type="text"
+											>
+											</v-text-field>
+											<v-text-field
+												v-model="coordB"
+												label="Latitude, Longitude B"
+												name="coordB"
+												type="text"
+											>
+											</v-text-field>
+											<v-text-field
+												v-model="distB"
+												label="Distance from B in metres"
+												name="distB"
+												type="text"
+											>
+											</v-text-field>
+											<v-text-field
+												v-model="coordC"
+												label="Latitude, Longitude C"
+												name="coordC"
+												type="text"
+											>
+											</v-text-field>
+											<v-text-field
+												v-model="distC"
+												label="Distance from C in metres"
+												name="distC"
+												type="text"
+											>
+											</v-text-field>
+										</v-form>
+									</v-card-text>
+									<v-card-actions
+										class="justify-center"
 									>
-									</v-text-field>
-									<v-textarea
-										v-model="outputGeoJSON"
-										label="Output GeoJSON"
-										name="outputGeoJSON"
-										type="text"
-									>	
-									</v-textarea>
-								</v-card-text>
+										<v-btn
+											color="primary"
+											@click="calculateWithGeodesics"
+										>
+											Calculate
+										</v-btn>
+									</v-card-actions>
+									<v-card-text>
+										<v-text-field
+										readonly
+											v-model="target"
+											label="Target"
+											name="target"
+											type="text"
+										>
+										</v-text-field>
+									</v-card-text>
+								</div>
+								<div v-show="showLonLat">
+									<v-card-text>
+										<v-form>
+											<v-text-field
+												v-model="coordA"
+												label="Longitude, Latitude A"
+												name="coordA"
+												type="text"
+											>
+											</v-text-field>
+											<v-text-field
+												v-model="distA"
+												label="Distance from A in metres"
+												name="coordA"
+												type="text"
+											>
+											</v-text-field>
+											<v-text-field
+												v-model="coordB"
+												label="Longitude, Latitude B"
+												name="coordB"
+												type="text"
+											>
+											</v-text-field>
+											<v-text-field
+												v-model="distB"
+												label="Distance from B in metres"
+												name="distB"
+												type="text"
+											>
+											</v-text-field>
+											<v-text-field
+												v-model="coordC"
+												label="Longitude, Latitude C"
+												name="coordC"
+												type="text"
+											>
+											</v-text-field>
+											<v-text-field
+												v-model="distC"
+												label="Distance from C in metres"
+												name="distC"
+												type="text"
+											>
+											</v-text-field>
+										</v-form>
+									</v-card-text>
+									<v-card-actions
+										class="justify-center"
+									>
+										<v-btn
+											color="primary"
+											@click="calculateWithGeodesics"
+										>
+											Calculate
+										</v-btn>
+									</v-card-actions>
+									<v-card-text>
+										<v-text-field
+										readonly
+											v-model="target"
+											label="Target"
+											name="target"
+											type="text"
+										>
+										</v-text-field>
+									</v-card-text>
+								</div>
+								<div v-show="showGeoJSON">
+									<v-card-text>
+										<v-form>
+											<v-textarea
+												v-model="inputGeoJSON"
+												label="Input GeoJSON"
+												name="inputGeoJSON"
+												type="text"
+											>	
+											</v-textarea>
+										</v-form>
+									</v-card-text>
+									<v-card-actions
+										class="justify-center"
+									>
+										<v-btn
+											color="primary"
+											@click="calculateWithGeodesics"
+										>
+											Calculate
+										</v-btn>
+									</v-card-actions>
+									<v-card-text>
+										<v-textarea
+										readonly
+											v-model="outputGeoJSON"
+											label="Output GeoJSON"
+											name="outputGeoJSON"
+											type="text"
+										>	
+										</v-textarea>
+									</v-card-text>
+								</div>
 							</v-card>
 						</v-flex>
 					</v-layout>
