@@ -33,6 +33,13 @@
 								</v-toolbar>
 								<v-card-text>
 									<v-form>
+									  <v-textarea
+											v-model="inputGeoJSON"
+											label="Input GeoJSON"
+											name="inputGeoJSON"
+											type="text"
+										>	
+										</v-textarea>
 										<v-text-field
 											v-model="coordA"
 											label="Latitude,Longitude A"
@@ -42,7 +49,7 @@
 										</v-text-field>
 										<v-text-field
 											v-model="distA"
-											label="Distance from A"
+											label="Distance from A in metres"
 											name="coordA"
 											type="text"
 										>
@@ -56,7 +63,7 @@
 										</v-text-field>
 										<v-text-field
 											v-model="distB"
-											label="Distance from B"
+											label="Distance from B in metres"
 											name="distB"
 											type="text"
 										>
@@ -70,7 +77,7 @@
 										</v-text-field>
 										<v-text-field
 											v-model="distC"
-											label="Distance from C"
+											label="Distance from C in metres"
 											name="distC"
 											type="text"
 										>
@@ -82,9 +89,15 @@
 								>
 									<v-btn
 										color="primary"
-										@click="calculate"
+										@click="calculateWithGeodesics"
 									>
 										Calculate
+									</v-btn>
+									<v-btn
+										color="primary"
+										@click="calculateWithGeodesics"
+									>
+										Parse
 									</v-btn>
 								</v-card-actions>
 								<v-card-text>
@@ -96,6 +109,13 @@
 										type="text"
 									>
 									</v-text-field>
+									<v-textarea
+										v-model="outputGeoJSON"
+										label="Output GeoJSON"
+										name="outputGeoJSON"
+										type="text"
+									>	
+									</v-textarea>
 								</v-card-text>
 							</v-card>
 						</v-flex>
@@ -106,6 +126,7 @@
 
 		<script src="./js/vue.js"></script>
 		<script src="./js/vuetify.js"></script>
+		<script src="./js/geographiclib.js"></script>
 		<script src="./app.js"></script>
 	</body>
 </html>

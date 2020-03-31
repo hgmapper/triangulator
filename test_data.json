@@ -6,7 +6,7 @@
 50.748187,-1.267419
 1.543
 
-//geomap format
+//geoman format
 {
     "type": "FeatureCollection",
     "features": [{
@@ -50,19 +50,6 @@
         "geometry": {
             "type": "Point",
             "coordinates": [-1.267419, 50.748187]
-        }
-    }, {
-        "type": "Feature",
-        "properties": {
-            "shape": "Marker",
-            "maps": ["default-map"],
-            "name": "Unnamed Layer",
-            "category": "default",
-            "id": "15224b0a-5b63-4e88-8177-8100db8f281b"
-        },
-        "geometry": {
-            "type": "Point",
-            "coordinates": [-1.282927, 50.758015]
         }
     }]
 }
