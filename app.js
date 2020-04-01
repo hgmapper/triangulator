@@ -13,13 +13,17 @@ new Vue({
 		showLatLon: false,
 		showLonLat: false,
 		showGeoJSON: false,
-		coordA: "",
+		latlonA: "",
+		lonlatA: "",
 		distA: "",
-		coordB: "",
+		latlonB: "",
+		lonlatB: "",
 		distB: "",
-		coordC: "",
+		latlonC: "",
+		lonlatC: "",
 		distC: "",
-		target: "",
+		latlontarget: "",
+		lonlattarget: "",
 		inputGeoJSON: "",
 		outputGeoJSON: ""
 	},
@@ -29,34 +33,31 @@ new Vue({
 			
 			var lat1, lon1, lat2, lon2, lat3, lon3;
 			
+			if(this.showLatLon) {
+				this.lonlatA = this.latlonA.split(",")[1] + "," + this.latlonA.split(",")[0];
+				this.lonlatB = this.latlonB.split(",")[1] + "," + this.latlonB.split(",")[0];
+				this.lonlatC = this.latlonC.split(",")[1] + "," + this.latlonC.split(",")[0];
+			}
+			if(this.showLonLat) {
+				this.latlonA = this.lonlatA.split(",")[1] + "," + this.lonlatA.split(",")[0];
+				this.latlonB = this.lonlatB.split(",")[1] + "," + this.lonlatB.split(",")[0];
+				this.latlonC = this.lonlatC.split(",")[1] + "," + this.lonlatC.split(",")[0];
+			}
 			if(this.showGeoJSON) {
 				this.parseJSON();
-				
-				lat1 = this.coordA[1];
-				lon1 = this.coordA[0];
-				lat2 = this.coordB[1];
-				lon2 = this.coordB[0];
-				lat3 = this.coordC[1];
-				lon3 = this.coordC[0];
+			}
+			else {
+				this.createInputJSON();
 			}
 			
-			if(this.showLatLon) {
-				lat1 = parseFloat(this.coordA.split(",")[0]);
-				lon1 = parseFloat(this.coordA.split(",")[1]);
-				lat2 = parseFloat(this.coordB.split(",")[0]);
-				lon2 = parseFloat(this.coordB.split(",")[1]);
-				lat3 = parseFloat(this.coordC.split(",")[0]);
-				lon3 = parseFloat(this.coordC.split(",")[1]);
-			}
+		
+			lat1 = parseFloat(this.latlonA.split(",")[0]);
+			lon1 = parseFloat(this.latlonA.split(",")[1]);
+			lat2 = parseFloat(this.latlonB.split(",")[0]);
+			lon2 = parseFloat(this.latlonB.split(",")[1]);
+			lat3 = parseFloat(this.latlonC.split(",")[0]);
+			lon3 = parseFloat(this.latlonC.split(",")[1]);
 			
-			if(this.showLonLat) {
-				lat1 = parseFloat(this.coordA.split(",")[1]);
-				lon1 = parseFloat(this.coordA.split(",")[0]);
-				lat2 = parseFloat(this.coordB.split(",")[1]);
-				lon2 = parseFloat(this.coordB.split(",")[0]);
-				lat3 = parseFloat(this.coordC.split(",")[1]);
-				lon3 = parseFloat(this.coordC.split(",")[0]);
-			}
 			
 			var r1 = parseFloat(this.distA);
 			var r2 = parseFloat(this.distB);
@@ -96,14 +97,8 @@ new Vue({
 												 p7.lat2.toFixed(6), 
 												 p7.lon2.toFixed(6))
 			
-			if(this.showLonLat) {
-				var lon = this.target.split(",")[1];
-				var lat = this.target.split(",")[0];
-				this.target = lon + "," + lat;
-			}
-			if(this.showGeoJSON) {
-				this.exportJSON();
-			}
+			
+			this.exportJSON();
 		},
 
 		cosineRule(a, b, c) {
@@ -141,12 +136,64 @@ new Vue({
 		
 		parseJSON() {
 			var geoJSON = JSON.parse(this.inputGeoJSON);
-			this.coordA = geoJSON.features[0].geometry.coordinates;
+			this.lonlatA = geoJSON.features[0].geometry.coordinates[0] + "," + geoJSON.features[0].geometry.coordinates[1];
+			this.latlonA = geoJSON.features[0].geometry.coordinates[1] + "," + geoJSON.features[0].geometry.coordinates[0];
 			this.distA = geoJSON.features[0].properties.radius;
-			this.coordB = geoJSON.features[1].geometry.coordinates;
+			this.lonlatB = geoJSON.features[1].geometry.coordinates[0] + "," + geoJSON.features[1].geometry.coordinates[1];
+			this.latlonB = geoJSON.features[1].geometry.coordinates[1] + "," + geoJSON.features[1].geometry.coordinates[0];
 			this.distB = geoJSON.features[1].properties.radius;
-			this.coordC = geoJSON.features[2].geometry.coordinates;
+			this.lonlatC = geoJSON.features[2].geometry.coordinates[0] + "," + geoJSON.features[2].geometry.coordinates[1];
+			this.latlonC = geoJSON.features[2].geometry.coordinates[1] + "," + geoJSON.features[2].geometry.coordinates[0];
 			this.distC = geoJSON.features[2].properties.radius;
+		},
+		
+		createInputJSON() {
+			this.inputGeoJSON = JSON.stringify({
+				"type": "FeatureCollection",
+				"features": [{
+						"type": "Feature",
+						"properties": {
+								"shape": "Circle",
+								"radius": parseFloat(this.distA),
+								"maps": ["default-map"],
+								"name": "Unnamed Layer",
+								"category": "default",
+								"id": this.uuid()
+						},
+						"geometry": {
+								"type": "Point",
+								"coordinates": [parseFloat(this.lonlatA.split(",")[0]), parseFloat(this.lonlatA.split(",")[1])]
+						}
+				}, {
+						"type": "Feature",
+						"properties": {
+								"shape": "Circle",
+								"radius": parseFloat(this.distB),
+								"maps": ["default-map"],
+								"name": "Unnamed Layer",
+								"category": "default",
+								"id": this.uuid()
+						},
+						"geometry": {
+								"type": "Point",
+								"coordinates": [parseFloat(this.lonlatB.split(",")[0]), parseFloat(this.lonlatB.split(",")[1])]
+						}
+				}, {
+						"type": "Feature",
+						"properties": {
+								"shape": "Circle",
+								"radius": parseFloat(this.distC),
+								"maps": ["default-map"],
+								"name": "Unnamed Layer",
+								"category": "default",
+								"id": this.uuid()
+						},
+						"geometry": {
+								"type": "Point",
+								"coordinates": [parseFloat(this.lonlatC.split(",")[0]), parseFloat(this.lonlatC.split(",")[1])]
+						}
+				}]
+			});
 		},
 		
 		exportJSON() {
@@ -162,7 +209,7 @@ new Vue({
         },
         "geometry": {
             "type": "Point",
-            "coordinates": [this.target.split(",")[1], this.target.split(",")[0]]
+            "coordinates": [parseFloat(this.lonlattarget.split(",")[0]), parseFloat(this.lonlattarget.split(",")[1])]
         }
 			};
 			
@@ -195,10 +242,12 @@ new Vue({
 			}
 			
 			if(diffmin == diff1 || diffmin == diff2) {
-				this.target = lat1 + "," + lon1;
+				this.latlontarget = lat1 + "," + lon1;
+				this.lonlattarget = lon1 + "," + lat1;
 			}
 			else {
-				this.target = lat2 + "," + lon2;
+				this.latlontarget = lat2 + "," + lon2;
+				this.lonlattarget = lon2 + "," + lat2;
 			}
 		}
 	}
